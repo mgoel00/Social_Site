@@ -30,7 +30,7 @@ class Group(models.Model):
         ordering = ['name']
 
 
-class GroupMembers(models.Model):
+class GroupMember(models.Model):
 
     group = models.ForeignKey(Group,related_name='memberships')
     user = models.ForeignKey(User,related_name='user_groups')

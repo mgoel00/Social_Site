@@ -4,7 +4,7 @@ from django.urls import reverse_lazy
 from django.views import generic
 from django.http import Http404
 from braces.views import SelectRelatedMixin
-
+from django.contrib import messages
 from . import models
 from . import forms
 from django.contrib.auth import get_user_model
@@ -22,7 +22,7 @@ class UserPost(generic.ListView):
 
     def get_queryset(self):
         try:
-            self.post.user = User.objects.prefetch_related('posts').get(username__iexact=self.kwargs.get('username'))
+            self.post_user = User.objects.prefetch_related('posts').get(username__iexact=self.kwargs.get('username'))
         except User.DoesNotExist:
             raise Http404
         else:
@@ -40,7 +40,8 @@ class PostDetail(SelectRelatedMixin,generic.DetailView):
 
     def get_queryset(self):
         query_set = super().get_queryset()
-        return self.get_queryset.filter(user__username__iexact=self.kwargs.get('username'))
+        return query_set.filter(user__username__iexact=self.kwargs.get('username'))
+
 
 
 class CreatePost(SelectRelatedMixin,LoginRequiredMixin,generic.CreateView):
@@ -57,11 +58,12 @@ class CreatePost(SelectRelatedMixin,LoginRequiredMixin,generic.CreateView):
 class DeletePost(LoginRequiredMixin,SelectRelatedMixin,generic.DeleteView):
     model = models.Post
     select_related = ('user',"group")
-    success_url = reverse_lazy('posts:all')
+    success_url = reverse_lazy('groups:all')
+
 
     def get_queryset(self):
         query_set=super().get_queryset()
-        return query_set.filter(user_id = self.request.user_id)
+        return query_set.filter(user_id = self.request.user.id)
 
     def delete(self,*args,**kwargs):
         messages.success(self.request,'Post Deleted')

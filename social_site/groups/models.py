@@ -11,8 +11,8 @@ User = get_user_model()
 class Group(models.Model):
     name = models.CharField(max_length=256,unique=True)
     slug = models.SlugField(allow_unicode=True,unique=True)
-    description = models.TextField(blank=True,defualt='')
-    description_html = models.TextField(editable =False,defualt='',blank=True)
+    description = models.TextField(blank=True,default='')
+    description_html = models.TextField(editable =False,default='',blank=True)
     members = models.ManyToManyField(User,through='GroupMember')
 
     def __str__(self):
@@ -32,8 +32,8 @@ class Group(models.Model):
 
 class GroupMember(models.Model):
 
-    group = models.ForeignKey(Group,related_name='memberships')
-    user = models.ForeignKey(User,related_name='user_groups')
+    group = models.ForeignKey(Group,related_name='memberships',on_delete=models.CASCADE)
+    user = models.ForeignKey(User,related_name='user_groups',on_delete=models.CASCADE)
 
     def __str__(self):
         self.user.username

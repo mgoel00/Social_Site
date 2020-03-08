@@ -1,4 +1,4 @@
-{% extends 'group/group_base.html' %}
+{% extends 'groups/group_base.html' %}
 
 {% block pregroup %}
 <div class="col-md-4">
@@ -25,7 +25,7 @@
 
       {% for group in object_list %}
 
-        <a class = 'list-group-item' href="{% url 'groups:single' slug = group.slug%}">
+        <a class = 'list-group-item' href="{% url 'groups:single' slug=group.slug %}">
           <h3 class='title lis-group-item-heading'>{{group.name}}</h3>
           <div class="list-group-item-text container-fluid">
             {{group.description_html|safe}}
@@ -42,7 +42,7 @@
           </div>
         </a>
 
-      {% enfor %}
+      {% endfor %}
 
     </div>
   </div>
